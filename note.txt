@@ -1,0 +1,34 @@
+Those numbers are standard CWT claim identifiers.
+
+CWT uses small integer keys instead of long JSON names to keep the token compact.
+
+| Number | CWT claim | Meaning                                  |
+| -----: | --------- | ---------------------------------------- |
+|    `1` | `iss`     | Issuer — who created the token           |
+|    `2` | `sub`     | Subject — who the token is about         |
+|    `3` | `aud`     | Audience — who the token is intended for |
+|    `4` | `exp`     | Expiration time                          |
+|    `5` | `nbf`     | Not Before                               |
+|    `6` | `iat`     | Issued At                                |
+|    `7` | `cti`     | Token ID                                 |
+
+
+Sure. iss (issuer) simply means "who created/issued this token?"
+For example, suppose your Node.js server is called my-auth-server.
+
+const claims = {
+    1: "my-auth-server",              // iss
+    2: 12345,                         // sub = user ID
+    4: Math.floor(Date.now() / 1000) + 300  // exp
+};
+
+// CWT claims
+const claims = {
+    2: user.userId,                         // sub
+    4: Math.floor(Date.now() / 1000) + 300, // exp
+    100: user.name                          // custom claim
+};
+
+if (claims[1] !== "https://api.example.com") {
+    throw new Error("Wrong issuer");
+}

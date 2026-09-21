@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Login</title>
+</head>
+
+<body>
+  <h2>Login</h2>
+  <div id="loginForm">
+    <label>
+      Username:
+      <input type="text" id="username" value="" />
+    </label>
+    <br /><br />
+    <label>
+      Password:
+      <input type="password" id="password" value="" />
+    </label>
+    <br /><br />
+    <input type="button" id="loginButton" value="Login" />
+  </div>
+
+  <textarea id="tokenOutput" style="margin-top: 20px;" rows="10" cols="50"></textarea>
+
+  <script type="text/javascript">
+    const output = document.getElementById('tokenOutput');
+
+    document.getElementById('loginButton').addEventListener('click', async () => {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const response = await fetch('/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Login failed');
+        }
+
+        output.value = JSON.stringify(data, null, 2);
+
+        if (data.token) {
+          const profileResponse = await fetch('/user-profile', {
+            headers: {
+              Authorization: 'Bearer ' + data.token
+            }
+          });
+
+          const profileData = await profileResponse.json();
+
+          if (!profileResponse.ok) {
+            throw new Error(profileData.error || 'Profile request failed');
+          }
+
+          output.value += '\n\nPROFILE:\n' + JSON.stringify(profileData, null, 2);
+        }
+      } catch (error) {
+        output.value = 'ERROR:\n' + error.message;
+      }
+    });
+  </script>
+</body>
+
+</html>

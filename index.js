@@ -40,7 +40,7 @@ const users = [
   }
 ];
 
-const findUserByUsername = (username) => users.find((user) => user.username === username);
+const findUserByEmail = (email) => users.find((user) => user.email === email);
 const findUserById = (userId) => users.find((user) => user.userId === Number(userId));
 
 app.use(express.urlencoded({ extended: true }));
@@ -169,12 +169,11 @@ app.get("/login-form", (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
-  const { username, password } = req.body;
-  console.log(`Login attempt: username=${username}, password=${password}`);
-  const user = findUserByUsername(username);
-  console.log(user)
+  const { email, password } = req.body;
+  console.log(`Login attempt: email=${email}`);
+  const user = findUserByEmail(email);
   if (!user || user.password !== password) {
-    return res.status(401).json({ error: "Invalid username or password" });
+    return res.status(401).json({ error: "Invalid email or password" });
   }
 
   const token = await createCWT(user);

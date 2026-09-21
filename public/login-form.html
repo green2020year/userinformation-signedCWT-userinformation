@@ -10,13 +10,13 @@
   <h2>Login</h2>
   <div id="loginForm">
     <label>
-      Username:
-      <input type="text" id="username" value="" />
+      Email:
+      <input type="email" id="email" value="" required />
     </label>
     <br /><br />
     <label>
       Password:
-      <input type="password" id="password" value="" />
+      <input type="password" id="password" value="" required />
     </label>
     <br /><br />
     <input type="button" id="loginButton" value="Login" />
@@ -28,7 +28,7 @@
     const output = document.getElementById('tokenOutput');
 
     document.getElementById('loginButton').addEventListener('click', async () => {
-      const username = document.getElementById('username').value;
+      const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
 
       try {
@@ -37,7 +37,7 @@
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ username, password })
+          body: JSON.stringify({ email, password })
         });
 
         const data = await response.json();
